@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">    <title>LinkedIn Insight Generator</title>
+    <style>
+        /* Reset */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        /* Base Styles */
+        body {
+            width: 420px;
+            background-color: #f8fafc;
+            font-family: system-ui, -apple-system, sans-serif;
+            opacity: 0;
+            animation: fadeIn 0.3s ease-out forwards;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        /* Layout Utilities */
+        .flex { display: flex; }
+        .items-center { align-items: center; }
+        .justify-center { justify-content: center; }
+        .space-x-2 > * + * { margin-left: 0.5rem; }
+        .w-full { width: 100%; }
+        .mb-4 { margin-bottom: 1rem; }
+        .mb-5 { margin-bottom: 1.25rem; }
+        .mb-6 { margin-bottom: 1.5rem; }
+        .mr-2 { margin-right: 0.5rem; }
+        .mt-5 { margin-top: 1.25rem; }
+        .mt-6 { margin-top: 1.5rem; }
+        .text-center { text-align: center; }
+        .text-xs { font-size: 0.75rem; }
+        .text-sm { font-size: 0.875rem; }
+        .text-lg { font-size: 1.125rem; }
+        .text-xl { font-size: 1.25rem; }
+        .font-bold { font-weight: 700; }
+        .font-semibold { font-weight: 600; }
+        .text-gray-400 { color: #9ca3af; }
+        .text-gray-500 { color: #6b7280; }
+        .text-gray-600 { color: #4b5563; }
+        .text-gray-700 { color: #374151; }
+        .text-gray-800 { color: #1f2937; }
+        .text-blue-500 { color: #3b82f6; }
+        .text-yellow-400 { color: #fbbf24; }
+        .bg-white { background-color: #ffffff; }
+        .bg-gray-50 { background-color: #f9fafb; }
+        .rounded-lg { border-radius: 0.5rem; }
+        .border { border-width: 1px; }
+        .border-gray-200 { border-color: #e5e7eb; }
+        .shadow-sm { box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05); }
+        .p-4 { padding: 1rem; }
+        .hover\\:underline:hover { text-decoration: underline; }
+        .flex-grow { flex-grow: 1; }
+        
+        /* Font Awesome replacement icons */
+        .icon { display: inline-block; width: 1em; height: 1em; margin-right: 0.5em; }
+        .icon-save::before { content: "💾"; }
+        .icon-magic::before { content: "✨"; }
+        .icon-lightbulb::before { content: "💡"; }
+        body { width: 420px; background-color: #f8fafc; font-family: 'Inter', sans-serif; }
+        .container { padding: 24px; }
+        .input-label { display: block; margin-bottom: 8px; font-size: 0.875rem; font-weight: 500; color: #334155; }
+        .input-field, .textarea-field { width: 100%; padding: 10px 12px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 0.875rem; color: #1e293b; background-color: #ffffff; transition: border-color 0.2s, box-shadow 0.2s; }
+        .input-field:focus, .textarea-field:focus { outline: none; border-color: #3b82f6; box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.3); }        .btn { 
+            padding: 6px 16px;
+            border-radius: 16px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-align: center;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border: none;
+            height: 32px;
+            line-height: 20px;
+        }
+        .btn-primary { 
+            background-color: #0a66c2; 
+            color: white;
+        }
+        .btn-primary:hover { 
+            background-color: #004182;
+        }
+        .btn-primary:disabled { 
+            background-color: #98b4d2;
+            cursor: not-allowed;
+        }
+        .btn-secondary { 
+            background-color: rgba(0,0,0,0.6);
+            color: rgba(0,0,0,0.6);
+            background-color: white;
+            border: 1px solid rgba(0,0,0,0.6);
+        }
+        .btn-secondary:hover { 
+            background-color: rgba(0,0,0,0.08);
+            border-color: rgba(0,0,0,0.6);
+        }
+        .results-list li { background-color: #ffffff; padding: 12px 16px; margin-bottom: 8px; border-radius: 6px; border: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center; cursor: pointer; transition: background-color 0.15s, border-color 0.15s; }
+        .results-list li:hover { background-color: #eff6ff; border-color: #93c5fd; }
+        .status-message { text-align: center; padding: 10px; border-radius: 6px; margin-top: 15px; font-size: 0.875rem; }
+        .error { background-color: #fee2e2; color: #b91c1c; }
+        .success { background-color: #dcfce7; color: #166534; }
+        .loading-spinner { border: 4px solid #e0e0e0; border-top: 4px solid #3b82f6; border-radius: 50%; width: 24px; height: 24px; animation: spin 1s linear infinite; margin: 20px auto; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        .api-key-section { margin-bottom: 24px; padding: 16px; background-color: #ffffff; border-radius: 8px; border: 1px solid #e2e8f0; box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05); }
+        #apiKeyStatus { font-size: 0.75rem; margin-top: 6px; }
+        .btn-copy { background-color: #60a5fa; color: white; padding: 5px 10px; font-size: 0.75rem; border-radius: 4px; opacity: 0.7; transition: opacity 0.2s; }
+        .results-list li:hover .btn-copy { opacity: 1; }
+        .btn-copy.copied { background-color: #10b981; }
+        .hidden { display: none; }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <div class="container">        <div class="flex items-center justify-center mb-6">
+           <img src="icons/icon_svg.svg" alt="Logo" class="h-8 mr-2">
+            <h1 class="text-xl font-bold text-gray-800">LinkedIn Insight Generator</h1>
+        </div>
+
+        <div class="api-key-section">
+            <label for="apiKey" class="input-label">Together AI API Key:</label>
+            <div class="flex space-x-2">
+                <input type="password" id="apiKey" class="input-field flex-grow" placeholder="Enter your API Key">                <button id="saveApiKey" class="btn btn-secondary">💾 Save</button>
+            </div>
+            <p id="apiKeyStatus" class="text-gray-500"></p>
+        </div>
+
+        <div class="mb-5 bg-white p-4 rounded-lg border border-gray-200 shadow-sm">
+            <label for="modelName" class="input-label">AI Model (Optional):</label>
+            <input type="text" id="modelName" class="input-field" placeholder="Defaults to Mixtral-8x7B-Instruct">
+        </div>
+
+        <div class="mb-5 bg-white p-4 rounded-lg border border-gray-200 shadow-sm">            <label for="postContent" class="input-label">LinkedIn Post Text (Auto-filled or paste):</label>
+            <textarea id="postContent" rows="5" class="textarea-field mb-3"></textarea>
+            <div class="flex justify-end">
+                <button id="generateComment" class="btn btn-primary">✨ Generate Insights</button>
+            </div>
+        </div>
+
+        <div id="statusArea">
+            <p id="errorMessage" class="status-message error hidden"></p>
+            <p id="successMessage" class="status-message success hidden"></p>
+        </div>
+
+        <div id="loadingIndicator" class="hidden">
+            <div class="loading-spinner"></div>
+            <p class="text-center text-sm text-gray-600">Generating insights...</p>
+        </div>
+
+        <div id="resultsArea" class="bg-white p-4 rounded-lg border border-gray-200 shadow-sm mt-5 hidden">
+            <h2 class="text-lg font-semibold text-gray-700 mb-4 flex items-center"><i class="fas fa-lightbulb mr-2 text-yellow-400"></i>Generated Insights: <span class="text-sm text-gray-500 ml-2">(Click to Copy)</span></h2>
+            <ul id="commentList" class="results-list list-none p-0">
+                </ul>
+        </div>
+    </div>
+
+    <script src="popup.js"></script>
+</body>
+</html>

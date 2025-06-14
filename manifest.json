@@ -1,0 +1,37 @@
+{
+  "manifest_version": 3,
+  "name": "LinkedIn Insightful Commenter",
+  "version": "1.1.0",
+  "description": "Analyzes LinkedIn posts and generates insightful comments using Together AI.",
+  "icons": {
+    "16": "icons/icon_svg.svg",
+    "32": "icons/icon_svg.svg",
+    "48": "icons/icon_svg.svg",
+    "128": "icons/icon_svg.svg"
+  },
+  "permissions": [
+    "storage",
+    "activeTab",
+    "scripting"
+  ],
+  "host_permissions": [
+    "*://*.linkedin.com/*",
+    "*://api.together.xyz/*"
+  ],
+  "content_security_policy": {
+    "extension_pages": "script-src 'self'; object-src 'self'"
+  },
+  "action": {
+    "default_popup": "popup.html"
+  },
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": ["*://*.linkedin.com/*"],
+      "js": ["content.js"],
+      "css": ["content.css"]
+    }
+  ]
+}

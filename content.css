@@ -1,0 +1,45 @@
+/* content.css */
+.insight-generator-btn {
+    background-color: #0073b1; /* LinkedIn blue */
+    color: white !important; /* Use !important to override LinkedIn styles if needed */
+    border: none;
+    padding: 6px 12px;
+    border-radius: 18px;
+    font-size: 12px !important;
+    font-weight: 600 !important;
+    cursor: pointer;
+    transition: background-color 0.2s ease-in-out, transform 0.1s ease;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    margin-left: 8px !important; 
+    line-height: normal !important; /* Reset line height */
+    text-align: center;
+    vertical-align: middle; /* Align nicely with other buttons */
+    display: inline-flex !important; /* Use flex for centering if needed */
+    align-items: center;
+    justify-content: center;
+    text-decoration: none !important; /* Ensure no underline */
+}
+
+.insight-generator-btn:hover {
+    background-color: #005a8c !important; /* Darker LinkedIn blue */
+    transform: translateY(-1px);
+    color: white !important;
+}
+
+.insight-generator-btn:active {
+    transform: translateY(0px);
+    box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+}
+
+.insight-generator-btn:disabled {
+    background-color: #cccccc !important;
+    color: #666666 !important;
+    cursor: not-allowed;
+    opacity: 0.7;
+}
+
+.insight-generator-btn:disabled:hover {
+    transform: none;
+    background-color: #cccccc !important;
+    color: #666666 !important;
+}
